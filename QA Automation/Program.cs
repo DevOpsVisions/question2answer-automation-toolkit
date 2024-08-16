@@ -1,52 +1,131 @@
-﻿using System.Configuration;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
+﻿using QA_Automation.Common;
+using QA_Automation.Interfaces;
+using QA_Automation.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using ExcelDataReader;
 
 namespace QA_Automation
 {
+    // Main entry point for the application
     class Program
     {
         static void Main()
         {
-            string basePath = GetBasePath();
+            // Define the number of directory levels to traverse from the current directory.
+            // This constant can be adjusted based on how many levels up the base path should be located.
+            const int LEVELSTRAVERSE = 4;
+
+            // Retrieve the base path by traversing up the specified number of levels from the current directory.
+            // The GetBasePath method will handle the logic for traversing upwards and returning the correct directory.
+            string basePath = GetBasePath(LEVELSTRAVERSE);
+
+            // Combine the base path with the filename "default.xlsx" to create the full file path.
+            // Path.Combine ensures that the appropriate directory separator is used for the current operating system.
             string defaultFilePath = Path.Combine(basePath, "default.xlsx");
+
+            // Output the current default file path to the console so the user is aware of where the file is expected to be located.
             Console.WriteLine("Current default path is: " + defaultFilePath);
 
+            // Get the user-provided or default file path for the Excel file
             string filePath = GetFilePath(defaultFilePath);
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {
                 Console.WriteLine("File not found. Please provide a valid file path.");
-                return;
+                return; // Exit the program if no valid file path is provided
             }
 
+            // Prompt the user to enter a password for registration
             Console.WriteLine("Enter the password to use for registration:");
-            string password = ReadPassword();
+            IPasswordService passwordService = new PasswordService();
+            string password = passwordService.ReadPassword();
 
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                var userDataList = ReadUserDataFromExcel(filePath);
-                bool allUsersRegistered = RegisterUsers(driver, userDataList, password);
+            // Read user data from the Excel file
+            IExcelReader excelReader = new ExcelReader();
+            List<UserData> userDataList = excelReader.ReadUserData(filePath);
 
-                Console.WriteLine(allUsersRegistered ? "All users have been registered successfully." : "Registration process encountered errors.");
-                driver.Quit();
-            }
+            // Inject dependencies and initiate the registration process
+            IWebDriverService webDriverService = new WebDriverService();
+            IUserRegistrationService registrationService = new UserRegistrationService(webDriverService);
+
+            // Perform user registration and output the result
+            bool allUsersRegistered = registrationService.RegisterUsers(userDataList, password);
+            Console.WriteLine(allUsersRegistered ? "All users have been registered successfully." : "Registration process encountered errors.");
         }
 
-        static string GetBasePath()
+        /// <summary>
+        /// Retrieves the base path by traversing up a specified number of levels from the current directory.
+        /// </summary>
+        /// <param name="levelsToTraverse">The number of directory levels to traverse upwards from the current directory.</param>
+        /// <returns>
+        /// The base path after traversing the specified number of levels upwards. If the number of levels exceeds 
+        /// the available parent directories, the root directory is returned.
+        /// </returns>
+        static string GetBasePath(int levelsToTraverse)
         {
-            string currentDir = Directory.GetCurrentDirectory();
-            for (int i = 0; i < 4; i++)
+            // Validate the number of levels to ensure it's a positive number
+            if (levelsToTraverse < 1)
             {
-                currentDir = Directory.GetParent(currentDir).FullName;
+                throw new ArgumentOutOfRangeException(nameof(levelsToTraverse), "Number of levels to traverse must be greater than zero.");
             }
+
+            // Start from the current directory
+            string currentDir = Directory.GetCurrentDirectory();
+
+            try
+            {
+                // Traverse upwards the specified number of levels
+                for (int i = 0; i < levelsToTraverse; i++)
+                {
+                    DirectoryInfo parentDir = Directory.GetParent(currentDir);
+
+                    // If we reach the root directory, break early
+                    if (parentDir == null)
+                    {
+                        Console.WriteLine("Reached the root directory.");
+                        break;
+                    }
+
+                    currentDir = parentDir.FullName;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle potential errors, such as permission issues or other IO-related exceptions
+                Console.WriteLine($"An error occurred while traversing directories: {ex.Message}");
+            }
+
             return currentDir;
         }
 
+        /// <summary>
+        /// Retrieves the file path based on the user's input. The user is prompted to choose 
+        /// between using the default file path or entering a custom path. The function will 
+        /// continue to prompt the user until valid input is provided.
+        /// </summary>
+        /// <param name="defaultFilePath">The default file path to be used if the user selects the default option.</param>
+        /// <returns>
+        /// The file path chosen by the user. This will either be the default file path or a custom 
+        /// file path provided by the user.
+        /// </returns>
         static string GetFilePath(string defaultFilePath)
+        {
+            // Display file path options based on whether the default file exists or not
+            PrintFilePathOptions(defaultFilePath);
+
+            // Continuously prompt the user until they provide a valid choice
+            EUserChoice choice = GetValidUserChoice();
+
+            // Handle the user's choice and return the corresponding file path (default or custom)
+            return HandleUserChoice(choice, defaultFilePath);
+        }
+
+
+        /// <summary>
+        /// Prints the appropriate file path options based on whether the default file exists.
+        /// </summary>
+        /// <param name="defaultFilePath">The default file path.</param>
+        static void PrintFilePathOptions(string defaultFilePath)
         {
             if (File.Exists(defaultFilePath))
             {
@@ -54,168 +133,52 @@ namespace QA_Automation
             }
             else
             {
-                Console.WriteLine($"File not found: Make sure to copy it first to {defaultFilePath}. \nPress \n1 to use the default path \n2 to enter your own path:");
-            }
-        
-            string choice = Console.ReadLine();
-            if (choice == "1")
-            {
-                return defaultFilePath;
-            }
-            else if (choice == "2")
-            {
-                Console.WriteLine("Please enter your own path:");
-                string customPath = Console.ReadLine();
-                return customPath;
-            }
-            else
-            {
-                Console.WriteLine("Invalid choice. Returning null.");
-                return null;
+                Console.WriteLine($"File not found: Ensure it's copied to {defaultFilePath}. Press \n1 to use the default path \n2 to enter your own path:");
             }
         }
 
-        public static string ReadPassword()
+        /// <summary>
+        /// Continuously prompts the user until a valid choice (1 or 2) is entered.
+        /// </summary>
+        /// <returns>The user's valid choice as an EUserChoice enum.</returns>
+        static EUserChoice GetValidUserChoice()
         {
-            string password = "";
-            ConsoleKeyInfo key;
-
-            do
+            while (true) // Loop until valid input is received
             {
-                key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                string input = Console.ReadLine();
+
+                if (Enum.TryParse(input, out EUserChoice choice) && Enum.IsDefined(typeof(EUserChoice), choice))
                 {
-                    password = password[0..^1];
-                    Console.Write("\b \b");
-                }
-                else if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
-                {
-                    password += key.KeyChar;
-                    Console.Write("*");
-                }
-            } while (key.Key != ConsoleKey.Enter);
-
-            Console.WriteLine();
-            return password;
-        }
-
-        static List<UserData> ReadUserDataFromExcel(string filePath)
-        {
-            List<UserData> userDataList = new List<UserData>();
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
-            // Read column names from App.config
-            string userNameColumn = ConfigurationManager.AppSettings["UserNameColumn"];
-            string emailColumn = ConfigurationManager.AppSettings["EmailColumn"];
-
-            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
-            using (var reader = ExcelReaderFactory.CreateReader(stream))
-            {
-                // Initialize a flag to check if the header is processed
-                bool isHeaderProcessed = false;
-                var header = new Dictionary<string, int>();
-
-                while (reader.Read())
-                {
-                    // Process the header row
-                    if (!isHeaderProcessed)
-                    {
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            header[reader.GetValue(i).ToString()] = i;
-                        }
-
-                        // Check if required columns exist
-                        if (!header.ContainsKey(userNameColumn) || !header.ContainsKey(emailColumn))
-                        {
-                            throw new Exception($"Required columns '{userNameColumn}' or '{emailColumn}' not found in Excel.");
-                        }
-
-                        isHeaderProcessed = true;
-                        continue; // Skip to the next row after processing the header
-                    }
-
-                    // Process the data rows
-                    string userName = reader.GetValue(header[userNameColumn])?.ToString();
-                    string email = reader.GetValue(header[emailColumn])?.ToString();
-
-                    if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
-                    {
-                        userDataList.Add(new UserData(userName, email));
-                    }
-                }
-            }
-
-            if (userDataList.Count == 0)
-            {
-                throw new Exception("No user data found in Excel.");
-            }
-
-            return userDataList;
-        }
-
-        
-        static bool RegisterUsers(IWebDriver driver, List<UserData> userDataList, string password)
-        {
-            string registrationUrl = ConfigurationManager.AppSettings.Get("RegistrationUrl");
-            foreach (var userData in userDataList)
-            {
-                Console.WriteLine($"Registering user: {userData.UserName}, {userData.Email}");
-                driver.Navigate().GoToUrl(registrationUrl);
-                FillRegistrationForm(driver, userData, password);
-                ClickRegisterButton(driver);
-                System.Threading.Thread.Sleep(1000);
-                Logout(driver);
-        
-                if (!IsRegistrationFormPresent(driver))
-                {
-                    Console.WriteLine("User registered successfully.");
+                    return choice;
                 }
                 else
                 {
-                    Console.WriteLine("Failed to register user.");
-                    return false;
+                    Console.WriteLine("Invalid input. Please enter 1 for default path or 2 to enter a custom path.");
                 }
             }
-            return true;
         }
 
-        static void FillRegistrationForm(IWebDriver driver, UserData userData, string password)
+        /// <summary>
+        /// Handles the user's valid choice and returns the appropriate file path.
+        /// </summary>
+        /// <param name="choice">The user's choice.</param>
+        /// <param name="defaultFilePath">The default file path to return if chosen.</param>
+        /// <returns>The appropriate file path based on the user's choice.</returns>
+        static string HandleUserChoice(EUserChoice choice, string defaultFilePath)
         {
-            driver.FindElement(By.Id("handle")).SendKeys(userData.UserName);
-            driver.FindElement(By.Id("password")).SendKeys(password);
-            driver.FindElement(By.Id("email")).SendKeys(userData.Email);
-        }
+            switch (choice)
+            {
+                case EUserChoice.DefaultPath:
+                    return defaultFilePath;
 
-        static void ClickRegisterButton(IWebDriver driver)
-        {
-            try
-            {
-                var registerButton = driver.FindElement(By.CssSelector(".qa-form-tall-button-register[value='Register']"));
-                registerButton.Click();
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine("Registration process completed.");
-            }
-        }
+                case EUserChoice.CustomPath:
+                    Console.WriteLine("Please enter your own path:");
+                    return Console.ReadLine();
 
-        static void Logout(IWebDriver driver)
-        {
-            string logoutUrl = ConfigurationManager.AppSettings.Get("LogoutUrl");
-            driver.Navigate().GoToUrl(logoutUrl);
-        }
-
-        static bool IsRegistrationFormPresent(IWebDriver driver)
-        {
-            try
-            {
-                driver.FindElement(By.Id("handle"));
-                return true;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
+                default:
+                    // This default case is unlikely to be reached, but we include it for safety.
+                    Console.WriteLine("Unexpected error. Returning null.");
+                    return null;
             }
         }
     }
