@@ -1,6 +1,7 @@
 # Question2Answer Automation Toolkit
 
-This project automates several activities for the Question2Answer platform reducing manual effort and errors. It utilizes Selenium WebDriver to interact with the platform, performing tasks such as:
+This project automates several activities for the Question2Answer platform reducing manual effort and errors. 
+It utilizes Selenium WebDriver to interact with the platform, performing tasks such as the following features:
 ## Features
 - **User Registration:** Automates the registration process through the registration page.
 - **Removing Users:** Automates the process of deleting users from the platform.
