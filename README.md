@@ -1,14 +1,13 @@
 # Question2Answer Automation Toolkit
 
-This project automates the registration of users using data from an Excel file. It leverages Selenium WebDriver to interact with the registration page and handle user registrations.
-
+This project automates several activities for the Question2Answer platform reducing manual effort and errors. It utilizes Selenium WebDriver to interact with the platform, performing tasks such as:
 ## Features
-
-- Reads user data (username and email) from an Excel file.
-- Automatically registers users on a specified website.
-- Handles password input securely.
-- Supports default and custom file paths for the Excel file.
-- Logs the registration process and identifies any errors.
+- **User Registration:** Automates the registration process through the registration page.
+- **Removing Users:** Automates the process of deleting users from the platform.
+- **Reads User Data:** Extracts user information, such as username and email, directly from an Excel file, streamlining the registration process.
+- **Secure Password Handling:** Ensures that passwords are handled securely during the registration process, protecting sensitive user information.
+- **Flexible File Path Support:** Supports both default and custom file paths for the Excel file, allowing users to easily manage and update user data sources.
+- **Detailed Logging:** Logs the entire registration process, tracking each step and identifying any errors that occur for easy troubleshooting.
 
 ## Prerequisites
 
