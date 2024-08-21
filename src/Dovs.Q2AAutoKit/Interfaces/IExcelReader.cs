@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace QA_Automation.Interfaces
+namespace Dovs.Q2AAutoKit.Interfaces
 {
     // Interface to abstract Excel reading functionality
     public interface IExcelReader

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace QA_Automation.Interfaces
+namespace Dovs.Q2AAutoKit.Interfaces
 {
     // Interface to abstract the user registration process
     public interface IUserRegistrationService

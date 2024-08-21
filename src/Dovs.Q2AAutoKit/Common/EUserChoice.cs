@@ -1,4 +1,4 @@
-﻿namespace QA_Automation.Common
+﻿namespace Dovs.Q2AAutoKit.Common
 {
     public enum EUserChoice
     {

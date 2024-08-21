@@ -1,11 +1,11 @@
 ﻿using OpenQA.Selenium;
-using QA_Automation.Common;
-using QA_Automation.Interfaces;
+using Dovs.Q2AAutoKit.Common;
+using Dovs.Q2AAutoKit.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace QA_Automation.Services
+namespace Dovs.Q2AAutoKit.Services
 {
     // Class responsible for user registration process
     public class UserRegistrationService : IUserRegistrationService

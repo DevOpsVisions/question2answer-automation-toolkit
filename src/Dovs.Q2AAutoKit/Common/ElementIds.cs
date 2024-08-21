@@ -1,4 +1,4 @@
-﻿namespace QA_Automation.Common
+﻿namespace Dovs.Q2AAutoKit.Common
 {
     /// <summary>
     /// The ElementIds class serves as a centralized location for storing commonly used HTML element IDs

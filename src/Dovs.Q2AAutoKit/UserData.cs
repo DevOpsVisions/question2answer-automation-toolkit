@@ -1,4 +1,4 @@
-namespace QA_Automation
+namespace Dovs.Q2AAutoKit
 {
     public class UserData
     {

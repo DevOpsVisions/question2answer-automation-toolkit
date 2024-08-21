@@ -1,8 +1,8 @@
 ﻿using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
-using QA_Automation.Interfaces;
+using Dovs.Q2AAutoKit.Interfaces;
 
-namespace QA_Automation.Services
+namespace Dovs.Q2AAutoKit.Services
 {
     // Class responsible for creating instances of WebDriver (currently using ChromeDriver)
     public class WebDriverService : IWebDriverService

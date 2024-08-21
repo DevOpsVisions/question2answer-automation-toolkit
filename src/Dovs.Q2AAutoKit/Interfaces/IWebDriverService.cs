@@ -1,6 +1,6 @@
 ﻿using OpenQA.Selenium;
 
-namespace QA_Automation.Interfaces
+namespace Dovs.Q2AAutoKit.Interfaces
 {
     // Interface to abstract WebDriver creation to allow flexibility in using different browsers
     public interface IWebDriverService

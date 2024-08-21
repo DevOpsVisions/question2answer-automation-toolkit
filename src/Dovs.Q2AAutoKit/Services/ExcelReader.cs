@@ -1,11 +1,11 @@
 ﻿using ExcelDataReader;
-using QA_Automation.Interfaces;
+using Dovs.Q2AAutoKit.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 
-namespace QA_Automation.Services
+namespace Dovs.Q2AAutoKit.Services
 {
     // Class responsible for reading user data from an Excel file
     public class ExcelReader : IExcelReader

@@ -1,7 +1,7 @@
-﻿using QA_Automation.Interfaces;
+﻿using Dovs.Q2AAutoKit.Interfaces;
 using System;
 
-namespace QA_Automation.Services
+namespace Dovs.Q2AAutoKit.Services
 {
     public class PasswordService : IPasswordService
     {
