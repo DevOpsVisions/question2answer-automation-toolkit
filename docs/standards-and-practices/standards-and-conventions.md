@@ -1,6 +1,6 @@
 # Standards and Conventions
 
-## Repository and Application Conventions
+## Repository and Application
 
 This section outlines the standardized naming conventions used throughout the project to maintain consistency and clarity:
 
@@ -13,7 +13,7 @@ This section outlines the standardized naming conventions used throughout the pr
 - **Executable Name:** `Q2AAutoKit`  
   The short and efficient name used for the executable file, optimized for easy reference in scripts and command-line usage.
 
-## Solution and Projects Conventions
+## Solution and Projects
 
 To maintain a structured and organized codebase, the following naming conventions are used for the solution and project files:
 
@@ -45,4 +45,7 @@ A well-structured naming convention for Azure resources is crucial for quickly i
 - **Environment:** Test
 - **Azure Region:** UK South
 - **Instance:** 001
+
+More info:
+[Microsoft Azure Docs](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)
 
