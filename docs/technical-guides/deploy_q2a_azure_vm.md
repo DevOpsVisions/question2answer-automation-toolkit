@@ -126,6 +126,8 @@ sudo apt --fix-broken install
 
 ## 13. Download and Set Up Question2Answer
 
+If you want to work with the latest version of Question2Answer, download the newest release to your computer. If you're restoring from a backup, download your backup files instead.
+
 - Install Unzip Utility: Install the unzip utility to extract the downloaded Question2Answer files.
   
 ```bash
