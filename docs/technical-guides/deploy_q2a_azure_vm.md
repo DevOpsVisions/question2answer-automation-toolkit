@@ -182,6 +182,7 @@ sudo nano qa-config.php
 ```
 
 `sudo cp qa-config-example.php qa-config.php`: Copies the example configuration file to a new configuration file.
+
 `sudo nano qa-config.php`: Opens the configuration file in the Nano text editor.
 
 Be sure to provide the database name, user, and password that we created in `step # 14` in this file.
