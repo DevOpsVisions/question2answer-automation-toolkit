@@ -24,3 +24,25 @@ To maintain a structured and organized codebase, the following naming convention
   - `Dovs.Q2AAutoKit`: The main project file for the core application.
   - `Dovs.Q2AAutoKit.UnitTest`: The project file dedicated to unit tests.
   - `Dovs.Q2AAutoKit.IntTest`: The project file dedicated to integration tests.
+
+
+## Azure Cloud
+
+A well-structured naming convention for Azure resources is crucial for quickly identifying the resource type, associated workload, environment, Azure region, and instance. Our naming convention follows these key elements:
+
+- **Resource Type**
+- **Workload/Application**
+- **Environment**
+- **Azure Region**
+- **Instance**
+
+### Example:
+
+**Resource Name:** `rg-q2a-test-uksouth-001`
+
+- **Resource Type:** Resource Group
+- **Workload/Application:** Question2Answer
+- **Environment:** Test
+- **Azure Region:** UK South
+- **Instance:** 001
+
