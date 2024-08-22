@@ -6,6 +6,7 @@ This guide outlines the process for setting up a testing environment on Azure by
 
 Create a resource group with the `az group create` command. An Azure resource group is a logical container into which Azure resources are deployed and managed.
 
+Open Azure Cloud Shell, and type the following command:
 
 ```powershell
 az group create --name rg-q2a-test-uksouth-001 --location uksouth
@@ -43,10 +44,11 @@ This command allows remote desktop access to the VM with a priority of 1100.
 
 Use SSH to connect to your VM and start configuring it.
 
+Open your terminal or Git Bash on your machine and type the following command. Replace publicIpAddress with the actual public IP address of your VM.
+
 ```bash
 ssh azureuser@publicIpAddress
 ```
-Replace publicIpAddress with the actual public IP address of your VM. This command initiates an SSH connection to the VM.
 
 ## 6. Update and Install the LAMP Stack
 
