@@ -49,3 +49,18 @@ A well-structured naming convention for Azure resources is crucial for quickly i
 More info:
 [Microsoft Azure Docs](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)
 
+## Repository Folder Structure
+
+The following is the folder structure used within the repository to maintain a clear and organized layout:
+
+### Folder Descriptions
+
+- **/docs**: Contains all documentation related to the project.
+  - **/standards-and-practices**: Holds documents outlining the standards and practices followed in the project.
+  - **/technical-guides**: Contains guides for deploying and managing the project, like `deploy_q2a_azure_vm.md`.
+  
+- **/src**: The source code directory.
+  - **/app**: Holds the application code.
+  - **/iac**: Infrastructure as Code (IaC) files for setting up the environment.
+  
+
