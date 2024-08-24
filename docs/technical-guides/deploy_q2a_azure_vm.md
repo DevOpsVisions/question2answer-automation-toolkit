@@ -203,6 +203,15 @@ source /home/mradwan/Downloads/oldbackup.sql # define the database sql file loca
 
 After completing these steps, navigate to http://yourPublicIPAddress in a browser to access your Question2Answer installation. If you restored from a backup, the application should display the restored version.
 
+## Troubleshooting  
+
+If you encounter errors during installation on a Linux machine, try running the following commands to ensure your package lists and installed packages are up-to-date:
+```bash
+sudo apt upgrade
+sudo apt update
+```
+
+
 
 
 
