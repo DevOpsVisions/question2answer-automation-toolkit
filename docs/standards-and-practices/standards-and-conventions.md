@@ -1,5 +1,7 @@
 # Standards and Conventions
-All standards and conventions outlined here are based on our established guidelines, which can be found in the following repository: [Common Workspace Hub](https://github.com/DevOpsVisions/common-workspace-hub)
+All standards and conventions outlined here are based on our established guidelines, which can be found in the following repository: 
+
+[Common Workspace Hub](https://github.com/DevOpsVisions/common-workspace-hub)
 
 ## Repository and Application
 
