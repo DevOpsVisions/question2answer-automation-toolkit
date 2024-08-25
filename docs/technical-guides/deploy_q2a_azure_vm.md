@@ -116,7 +116,7 @@ sudo service xrdp restart
 ```
 These commands will set up a remote desktop environment with Xfce and XRDP. After the installation is complete, open the remote desktop client and log in to the VM using the credentials configured during VM creation.
 
-## 12. Install Google Chrome
+## 12. Install Google Chrome or Firefox
 
 To download and install Google Chrome on your VM, which you can then use to download the Question2Answer files, follow these commands:
 
@@ -124,6 +124,10 @@ To download and install Google Chrome on your VM, which you can then use to down
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 sudo dpkg -i google-chrome-stable_current_amd64.deb
 sudo apt --fix-broken install
+```
+
+```bash
+sudo apt install firefox
 ```
 
 ## 13. Download and Set Up Question2Answer
@@ -211,9 +215,22 @@ sudo apt upgrade
 sudo apt update
 ```
 
+Copy all files to html folder root
+```bash
+sudo cp -a /home/mradwan/Downloads/learn.backup.ex/public_html/. /var/www/html
+```
 
 
 
-
-
-
+Remove not empty folder
+```bash
+ sudo rm -r /FolderName/
+```
+Remove all files inside a folder
+```bash
+sudo rm -r /FolderName/*
+```
+Edit .htaccess
+```bash 
+sudo nano /var/www/html/.htaccess
+```
