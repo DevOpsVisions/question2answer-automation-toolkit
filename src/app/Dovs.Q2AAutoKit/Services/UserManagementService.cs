@@ -3,22 +3,24 @@ using Dovs.Q2AAutoKit.Common;
 using Dovs.Q2AAutoKit.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 
 namespace Dovs.Q2AAutoKit.Services
 {
     // Class responsible for user registration process
-    public class UserRegistrationService : IUserRegistrationService
+    public class UserManagementService : IUserManagementService
     {
         private readonly IWebDriverService _webDriverService;
+        private readonly IConfigurationService _configurationService;
 
         /// <summary>
-        /// Constructor to inject WebDriver service dependency.
+        /// Constructor to inject WebDriver and Configuration service dependencies.
         /// </summary>
         /// <param name="webDriverService">The service responsible for providing WebDriver instances.</param>
-        public UserRegistrationService(IWebDriverService webDriverService)
+        /// <param name="configurationService">The service responsible for providing configuration values.</param>
+        public UserManagementService(IWebDriverService webDriverService, IConfigurationService configurationService)
         {
             _webDriverService = webDriverService;
+            _configurationService = configurationService;
         }
 
         /// <summary>
@@ -31,7 +33,7 @@ namespace Dovs.Q2AAutoKit.Services
         {
             using (var driver = _webDriverService.CreateWebDriver())
             {
-                string registrationUrl = ConfigurationManager.AppSettings.Get("RegistrationUrl");
+                string registrationUrl = _configurationService.GetConfigValue("RegistrationUrl");
 
                 // Loop through each user and perform the registration process
                 foreach (var user in users)
@@ -97,7 +99,7 @@ namespace Dovs.Q2AAutoKit.Services
         /// <param name="driver">Instance of the WebDriver controlling the browser.</param>
         private void Logout(IWebDriver driver)
         {
-            string logoutUrl = ConfigurationManager.AppSettings.Get("LogoutUrl");
+            string logoutUrl = _configurationService.GetConfigValue("LogoutUrl");
             driver.Navigate().GoToUrl(logoutUrl);
         }
 

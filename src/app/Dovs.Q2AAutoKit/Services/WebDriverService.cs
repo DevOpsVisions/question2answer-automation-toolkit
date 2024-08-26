@@ -15,5 +15,10 @@ namespace Dovs.Q2AAutoKit.Services
         {
             return new ChromeDriver();
         }
+
+        public void QuitWebDriver(IWebDriver driver)
+        {
+            driver.Quit();
+        }
     }
 }

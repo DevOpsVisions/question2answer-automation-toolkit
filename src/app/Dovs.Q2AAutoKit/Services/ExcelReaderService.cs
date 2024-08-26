@@ -2,28 +2,27 @@
 using Dovs.Q2AAutoKit.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 
 namespace Dovs.Q2AAutoKit.Services
 {
-    // Class responsible for reading user data from an Excel file
-    public class ExcelReader : IExcelReader
+    public class ExcelReaderService : IExcelReaderService
     {
-        /// <summary>
-        /// Reads user data (username and email) from the specified Excel file.
-        /// Throws an exception if the necessary columns are not found or no data is present.
-        /// </summary>
-        /// <param name="filePath">Path to the Excel file containing user data.</param>
-        /// <returns>List of user data (username and email).</returns>
+        private readonly IConfigurationService _configurationService;
+
+        public ExcelReaderService(IConfigurationService configurationService)
+        {
+            _configurationService = configurationService;
+        }
+
         public List<UserData> ReadUserData(string filePath)
         {
             List<UserData> userDataList = new List<UserData>();
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
-            // Read column names from the app.config file
-            string userNameColumn = ConfigurationManager.AppSettings["UserNameColumn"];
-            string emailColumn = ConfigurationManager.AppSettings["EmailColumn"];
+            // Read column names from the configuration service
+            string userNameColumn = _configurationService.GetConfigValue("UserNameColumn");
+            string emailColumn = _configurationService.GetConfigValue("EmailColumn");
 
             using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
             using (var reader = ExcelReaderFactory.CreateReader(stream))
@@ -33,7 +32,6 @@ namespace Dovs.Q2AAutoKit.Services
 
                 while (reader.Read())
                 {
-                    // Process the header row to map column names to their indices
                     if (!isHeaderProcessed)
                     {
                         for (int i = 0; i < reader.FieldCount; i++)
@@ -41,28 +39,25 @@ namespace Dovs.Q2AAutoKit.Services
                             header[reader.GetValue(i).ToString()] = i;
                         }
 
-                        // Ensure the required columns are present in the Excel file
                         if (!header.ContainsKey(userNameColumn) || !header.ContainsKey(emailColumn))
                         {
                             throw new Exception($"Required columns '{userNameColumn}' or '{emailColumn}' not found.");
                         }
 
                         isHeaderProcessed = true;
-                        continue; // Move to the next row after processing the header
+                        continue;
                     }
 
-                    // Read and validate the username and email for each user
                     string userName = reader.GetValue(header[userNameColumn])?.ToString();
                     string email = reader.GetValue(header[emailColumn])?.ToString();
 
                     if (!string.IsNullOrEmpty(userName) && !string.IsNullOrEmpty(email))
                     {
-                        userDataList.Add(new UserData(userName, email)); // Add valid user data to the list
+                        userDataList.Add(new UserData(userName, email));
                     }
                 }
             }
 
-            // Ensure there is user data present
             if (userDataList.Count == 0)
             {
                 throw new Exception("No user data found in Excel.");
@@ -72,3 +67,4 @@ namespace Dovs.Q2AAutoKit.Services
         }
     }
 }
+

@@ -5,11 +5,13 @@ namespace Dovs.Q2AAutoKit.Services
 {
     public class PasswordService : IPasswordService
     {
-        /// <summary>
-        /// Reads a password from the console without echoing the characters.
-        /// </summary>
-        /// <returns>The password entered by the user.</returns>
-        public string ReadPassword()
+        public string PromptForPassword(string prompt)
+        {
+            Console.WriteLine(prompt);
+            return ReadPassword();
+        }
+
+        private string ReadPassword()
         {
             string password = string.Empty;
             ConsoleKeyInfo key;

@@ -3,6 +3,6 @@
     // Interface to abstract password reading functionality
     public interface IPasswordService
     {
-        string ReadPassword();
+        string PromptForPassword(string prompt);
     }
 }
