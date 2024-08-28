@@ -50,58 +50,17 @@ Open your terminal or Git Bash on your machine and type the following command. R
 ssh azureuser@publicIpAddress
 ```
 
-## 6. Update and Install the LAMP Stack
 
-Update the package lists and install the LAMP stack (Linux, Apache, MySQL, PHP) on your VM.
+## 6. Update and upgrade apt
 
-```bash
-sudo apt update && sudo apt install lamp-server^
-```
-This installs the LAMP stack necessary for running Question2Answer.
-
-## 7. Verify Installation
-
-Check the versions of Apache, MySQL, and PHP to ensure they are installed correctly.
+Update the package lists and upgrade it.
 
 ```bash
-apache2 -v
-mysql -V
-php -v
-```
-These commands display the versions of Apache, MySQL, and PHP installed on your VM.
-
-## 8. Secure MySQL Installation
-
-Run the MySQL security script to improve the security of your MySQL installation.
-
-```bash
-sudo mysql_secure_installation
-```
-Follow the prompts to set the root password and configure security settings.
-
-# 9. Configure MySQL Root User
-
-Update the MySQL root user authentication method and set a new password.
+sudo apt update 
+sudo apt upgrade 
 
 ```
-sudo mysql
-
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-exit
-```
-This command accesses MySQL, updates the root user authentication method, and sets a new password.
-
-## 10. Create a PHP Info File (Optional)
-
-To test further, you can create a simple PHP info page to view in your browser. Use the following command to create the PHP info page:
-
-```bash
-sudo sh -c 'echo "<?php phpinfo(); ?>" > /var/www/html/info.php'
-```
-After creating the page, open a browser and navigate to http://yourPublicIPAddress/info.php to view the PHP information.
-
-
-## 11. Install and Configure Xfce and XRDP (Optional)
+## 7. Install and Configure Xfce and XRDP (Optional)
 
 Install the Xfce desktop environment and XRDP for remote desktop access.
 
@@ -116,7 +75,7 @@ sudo service xrdp restart
 ```
 These commands will set up a remote desktop environment with Xfce and XRDP. After the installation is complete, open the remote desktop client and log in to the VM using the credentials configured during VM creation.
 
-## 12. Install Google Chrome or Firefox
+## 8. Install Google Chrome or Firefox
 
 To download and install Google Chrome on your VM, which you can then use to download the Question2Answer files, follow these commands:
 
@@ -129,8 +88,61 @@ sudo apt --fix-broken install
 ```bash
 sudo apt install firefox
 ```
+## 9. Update and Install the LAMP Stack
 
-## 13. Download and Set Up Question2Answer
+Update the package lists and install the LAMP stack (Linux, Apache, MySQL, PHP) on your VM.
+
+```bash
+sudo apt update && sudo apt install lamp-server^
+```
+This installs the LAMP stack necessary for running Question2Answer.
+
+## 10. Verify Installation
+
+Check the versions of Apache, MySQL, and PHP to ensure they are installed correctly.
+
+```bash
+apache2 -v
+mysql -V
+php -v
+```
+These commands display the versions of Apache, MySQL, and PHP installed on your VM.
+
+
+## 11. Create a PHP Info File (Optional)
+
+To test further, you can create a simple PHP info page to view in your browser. Use the following command to create the PHP info page:
+
+```bash
+sudo sh -c 'echo "<?php phpinfo(); ?>" > /var/www/html/info.php'
+```
+After creating the page, open a browser and navigate to http://yourPublicIPAddress/info.php to view the PHP information.
+
+
+## 12. Secure MySQL Installation
+
+Run the MySQL security script to improve the security of your MySQL installation.
+
+```bash
+sudo mysql_secure_installation
+```
+Follow the prompts to set the root password and configure security settings.
+
+## 13. Configure MySQL Root User
+
+Update the MySQL root user authentication method and set a new password.
+
+```
+sudo mysql
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+exit
+```
+This command accesses MySQL, updates the root user authentication method, and sets a new password.
+
+
+
+## 14. Download and Set Up Question2Answer
 
 If you want to work with the latest version of Question2Answer, download the newest release to your computer. If you're restoring from a backup, download your backup files instead.
 
@@ -158,13 +170,13 @@ sudo chown -R www-data:www-data /var/www/html/
 sudo chmod -R 755 /var/www/html/
 ```
 
-## 14. Configure MySQL for Question2Answer
+## 15. Configure MySQL for Question2Answer
 Set up MySQL with a new user and database for Question2Answer.
 
 ```bash
 mysql -u root -p
 ```
-When asking for the password, set the password that we set for the root user in `step #9`
+When asking for the password, set the password that we set for the root user in `step #13`
 
 To list all existing MySQL users, you can use the following command:
 
@@ -180,7 +192,7 @@ FLUSH PRIVILEGES;
 ```
 These commands create a new MySQL user and database for Question2Answer and grant the necessary privileges to the new user on the new database.
 
-## 15. Configure Question2Answer
+## 16. Configure Question2Answer
 
 Edits the Question2Answer configuration file (qa-config.php) to include database and other settings. 
 
@@ -193,9 +205,9 @@ sudo nano qa-config.php
 
 `sudo nano qa-config.php`: Opens the configuration file in the Nano text editor.
 
-Be sure to provide the database name, user, and password that we created in `step # 14` in this file.
+Be sure to provide the database name, user, and password that we created in `step # 15` in this file.
 
-## 16. Import Database (Optional)
+## 17. Import Database (Optional)
 
 If restoring from a backup, import the database using the following commands:
 
@@ -207,30 +219,41 @@ source /home/mradwan/Downloads/oldbackup.sql # define the database sql file loca
 
 After completing these steps, navigate to http://yourPublicIPAddress in a browser to access your Question2Answer installation. If you restored from a backup, the application should display the restored version.
 
+
 ## Troubleshooting  
 
-If you encounter errors during installation on a Linux machine, try running the following commands to ensure your package lists and installed packages are up-to-date:
+If you encounter errors during installation on a Linux machine, try running the following commands to ensure your package lists are updated and all installed packages are current:
+
 ```bash
-sudo apt upgrade
 sudo apt update
+sudo apt upgrade
 ```
 
-Copy all files to html folder root
+To copy all files to the HTML root folder:
+
 ```bash
 sudo cp -a /home/mradwan/Downloads/learn.backup.ex/public_html/. /var/www/html
 ```
 
-
-
-Remove not empty folder
+To remove a non-empty folder:
 ```bash
- sudo rm -r /FolderName/
+sudo rm -r /FolderName/
 ```
-Remove all files inside a folder
+To remove all files inside a specific folder:
 ```bash
 sudo rm -r /FolderName/*
 ```
-Edit .htaccess
-```bash 
+
+To edit the .htaccess file:
+
+```bash
 sudo nano /var/www/html/.htaccess
+```
+To set the correct permissions for the HTML directory:
+
+```bash
+Copy code
+sudo chown -R www-data:www-data /var/www/html/
+sudo find /var/www/html/ -type d -exec chmod 755 {} \;
+sudo find /var/www/html/ -type f -exec chmod 644 {} \;
 ```
