@@ -252,7 +252,6 @@ sudo nano /var/www/html/.htaccess
 To set the correct permissions for the HTML directory:
 
 ```bash
-Copy code
 sudo chown -R www-data:www-data /var/www/html/
 sudo find /var/www/html/ -type d -exec chmod 755 {} \;
 sudo find /var/www/html/ -type f -exec chmod 644 {} \;
