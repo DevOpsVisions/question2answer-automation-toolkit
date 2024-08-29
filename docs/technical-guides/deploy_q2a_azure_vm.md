@@ -1,258 +1,89 @@
-# Deploying/Restoring Question2Answer on Azure VM
+# Deploying or Restoring Question2Answer on an Azure VM
 
-This guide outlines the process for setting up a testing environment on Azure by deploying or restoring Question2Answer on an Ubuntu VM. It includes detailed steps for creating a resource group, provisioning and configuring the VM, and setting up the Question2Answer application. Follow these instructions to ensure a smooth deployment and configuration for testing purposes.
+This guide provides a comprehensive walkthrough for setting up a testing environment on Azure by deploying or restoring Question2Answer on an Ubuntu VM. The instructions cover preparing a LAMP stack environment, configuring essential components, and deploying the Question2Answer application. Follow these steps to ensure a smooth deployment and configuration process for testing purposes.
 
-## 1. Create a Resource Group
+## 1. Preparing a LAMP Stack Environment
 
-Create a resource group with the `az group create` command. An Azure resource group is a logical container into which Azure resources are deployed and managed.
+To prepare your environment, refer to the following guide:
 
-Open Azure Cloud Shell, and type the following command:
+[Preparing a LAMP Stack Environment for Hosting](https://github.com/DevOpsVisions/common-workspace-hub/blob/main/prepare_lamp_stack_env.md)
 
-```powershell
-az group create --name rg-q2a-test-uksouth-001 --location uksouth
-```
-This example creates a resource group named rg-q2a-test-uksouth-001 in the uksouth region.
+## 2. Download and Set Up Question2Answer
 
-## 2. Create a Virtual Machine (VM)
+Download the Question2Answer zip file, whether it's the latest version or a backup from your production environment.
 
-Provision a VM using the `az vm create` command. This VM will serve as the host for your Question2Answer installation.
-
-```powershell
-az vm create --resource-group rg-q2a-test-uksouth-001 --name vm-q2a-test-uksouth-001 --image Ubuntu2204 --admin-username azureuser  --admin-password 'password'
-```
-In this example, a VM named vm-q2a-test-uksouth-001 is created with the Ubuntu 22.04 image, and an admin username and password are specified. Once the VM is created, the Azure CLI will display details for the VM. Be sure to take note of the publicIpAddress, as you'll need it later to connect to the VM.
-
-## 3. Open Port 80 for HTTP Traffic
-
-Open port 80 to allow HTTP traffic to your VM. This enables web access to your Question2Answer application.
-
-```powershell
-az vm open-port --port 80 --resource-group rg-q2a-test-uksouth-001 --name vm-q2a-test-uksouth-001
-```
-Port 80 is opened for HTTP traffic on the VM named vm-q2a-test-uksouth-001.
-
-## 4. Open Port 3389 for RDP (Optional)
-
-Open port 3389 for RDP access if you need to connect to the VM using a remote desktop protocol.
-
-```powershell
-az vm open-port --port 3389 --priority 1100 --resource-group rg-q2a-test-uksouth-001 --name vm-q2a-test-uksouth-001
-```
-This command allows remote desktop access to the VM with a priority of 1100.
-
-## 5. Connect to the VM via SSH
-
-Use SSH to connect to your VM and start configuring it.
-
-Open your terminal or Git Bash on your machine and type the following command. Replace publicIpAddress with the actual public IP address of your VM.
-
-```bash
-ssh azureuser@publicIpAddress
-```
-
-
-## 6. Update and upgrade apt
-
-Update the package lists and upgrade it.
-
-```bash
-sudo apt update 
-sudo apt upgrade 
-
-```
-## 7. Install and Configure Xfce and XRDP (Optional)
-
-Install the Xfce desktop environment and XRDP for remote desktop access.
-
-```bash
-sudo DEBIAN_FRONTEND=noninteractive apt-get -y install xfce4
-sudo apt install xfce4-session
-sudo apt-get -y install xrdp
-sudo systemctl enable xrdp
-sudo adduser xrdp ssl-cert
-echo xfce4-session >~/.xsession
-sudo service xrdp restart
-```
-These commands will set up a remote desktop environment with Xfce and XRDP. After the installation is complete, open the remote desktop client and log in to the VM using the credentials configured during VM creation.
-
-## 8. Install Google Chrome or Firefox
-
-To download and install Google Chrome on your VM, which you can then use to download the Question2Answer files, follow these commands:
-
-```bash
-wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo dpkg -i google-chrome-stable_current_amd64.deb
-sudo apt --fix-broken install
-```
-
-```bash
-sudo apt install firefox
-```
-## 9. Update and Install the LAMP Stack
-
-Update the package lists and install the LAMP stack (Linux, Apache, MySQL, PHP) on your VM.
-
-```bash
-sudo apt update && sudo apt install lamp-server^
-```
-This installs the LAMP stack necessary for running Question2Answer.
-
-## 10. Verify Installation
-
-Check the versions of Apache, MySQL, and PHP to ensure they are installed correctly.
-
-```bash
-apache2 -v
-mysql -V
-php -v
-```
-These commands display the versions of Apache, MySQL, and PHP installed on your VM.
-
-
-## 11. Create a PHP Info File (Optional)
-
-To test further, you can create a simple PHP info page to view in your browser. Use the following command to create the PHP info page:
-
-```bash
-sudo sh -c 'echo "<?php phpinfo(); ?>" > /var/www/html/info.php'
-```
-After creating the page, open a browser and navigate to http://yourPublicIPAddress/info.php to view the PHP information.
-
-
-## 12. Secure MySQL Installation
-
-Run the MySQL security script to improve the security of your MySQL installation.
-
-```bash
-sudo mysql_secure_installation
-```
-Follow the prompts to set the root password and configure security settings.
-
-## 13. Configure MySQL Root User
-
-Update the MySQL root user authentication method and set a new password.
-
-```
-sudo mysql
-
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
-exit
-```
-This command accesses MySQL, updates the root user authentication method, and sets a new password.
-
-
-
-## 14. Download and Set Up Question2Answer
-
-If you want to work with the latest version of Question2Answer, download the newest release to your computer. If you're restoring from a backup, download your backup files instead.
-
-- Install Unzip Utility: Install the unzip utility to extract the downloaded Question2Answer files.
-  
-```bash
-sudo apt install unzip
-```
-- Unzip the Question2Answer Archive: Extract the Question2Answer zip file you downloaded.
+1. **Unzip the Question2Answer Archive:** Extract the downloaded Question2Answer zip file.
 
 ```bash
 unzip /home/azureuser/Downloads/question2answer-latest.zip
 ```
 
-- Move Question2Answer to the Web Directory: Copy the extracted Question2Answer files to the default directory for Apache web files
+2. **Clean the Web Directory:** Remove any existing files in the Apache web directory to ensure a clean installation.
 
 ```bash
-sudo cp -r /home/azureuser/Downloads/question2answer-1.8.8/ /var/www/html
+sudo rm -r /var/www/html/*
 ```
 
-- Set Ownership and Permissions: Adjust the ownership and permissions of the Question2Answer files to ensure they are accessible by the web server.
+2. **Copy Question2Answer to the Web Directory:** Copy the extracted Question2Answer files to the Apache web directory.
 
+```bash
+sudo cp -r /home/azureuser/Downloads/question2answer-1.8.8/public_html/. /var/www/html
 ```
+
+3. **Set Ownership and Permissions:** Adjust the ownership and permissions to ensure the files are accessible by the web server.
+
+```bash
 sudo chown -R www-data:www-data /var/www/html/
+```
+```bash
 sudo chmod -R 755 /var/www/html/
 ```
 
-## 15. Configure MySQL for Question2Answer
-Set up MySQL with a new user and database for Question2Answer.
+## 3. Configure MySQL for Question2Answer
+
+1. **Log in to MySQL:** Log in to MySQL with the root user.
 
 ```bash
 mysql -u root -p
 ```
-When asking for the password, set the password that we set for the root user in `step #13`
+Enter the root password set during the MySQL installation.
 
-To list all existing MySQL users, you can use the following command:
+2. **Create MySQL User and Database**: Run the following commands to create a new MySQL user and database for Question2Answer. These commands also grant the required privileges to the new user on the newly created database.
 
-```bash
-SELECT User, Host FROM mysql.user;
-```
-```bash
+```sql
 CREATE USER 'q2aUser'@'localhost' IDENTIFIED BY 'password';
+```
+```sql
 CREATE DATABASE question2answer;
-SHOW DATABASES;
+```
+```sql
 GRANT ALL PRIVILEGES ON question2answer.* TO 'q2aUser'@'localhost';
+```
+```sql
 FLUSH PRIVILEGES;
 ```
-These commands create a new MySQL user and database for Question2Answer and grant the necessary privileges to the new user on the new database.
 
-## 16. Configure Question2Answer
+## 4. Configure Question2Answer
 
-Edits the Question2Answer configuration file (qa-config.php) to include database and other settings. 
+1. **Edit Configuration File**: Copy the example configuration file and edit it to include database and other settings.
 
 ```bash
 sudo cp qa-config-example.php qa-config.php
+```
+```bash
 sudo nano qa-config.php
 ```
+In `qa-config.php`, provide the database name, user, and password created in the MySQL configuration step.
 
-`sudo cp qa-config-example.php qa-config.php`: Copies the example configuration file to a new configuration file.
+## 5. Import Database (Optional)
 
-`sudo nano qa-config.php`: Opens the configuration file in the Nano text editor.
-
-Be sure to provide the database name, user, and password that we created in `step # 15` in this file.
-
-## 17. Import Database (Optional)
-
-If restoring from a backup, import the database using the following commands:
+If you are restoring from a production environment backup, use the following commands to import the database:
 
 ```bash
-USE question2answer; # define database name
-
-source /home/mradwan/Downloads/oldbackup.sql # define the database sql file location to be imported
+USE question2answer;
+source /home/azureuser/Downloads/oldbackup.sql
 ```
 
-After completing these steps, navigate to http://yourPublicIPAddress in a browser to access your Question2Answer installation. If you restored from a backup, the application should display the restored version.
+## 6. Access Your Question2Answer Installation
 
-
-## Troubleshooting  
-
-If you encounter errors during installation on a Linux machine, try running the following commands to ensure your package lists are updated and all installed packages are current:
-
-```bash
-sudo apt update
-sudo apt upgrade
-```
-
-To copy all files to the HTML root folder:
-
-```bash
-sudo cp -a /home/mradwan/Downloads/learn.backup.ex/public_html/. /var/www/html
-```
-
-To remove a non-empty folder:
-```bash
-sudo rm -r /FolderName/
-```
-To remove all files inside a specific folder:
-```bash
-sudo rm -r /FolderName/*
-```
-
-To edit the .htaccess file:
-
-```bash
-sudo nano /var/www/html/.htaccess
-```
-To set the correct permissions for the HTML directory:
-
-```bash
-sudo chown -R www-data:www-data /var/www/html/
-sudo find /var/www/html/ -type d -exec chmod 755 {} \;
-sudo find /var/www/html/ -type f -exec chmod 644 {} \;
-```
+After completing these steps, navigate to `http://<yourPublicIPAddress>` in a web browser to access your Question2Answer installation. If restored from a backup, the application should display the restored version.
