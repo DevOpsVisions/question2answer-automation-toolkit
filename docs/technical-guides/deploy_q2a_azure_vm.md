@@ -12,25 +12,25 @@ To prepare your environment, refer to the following guide:
 
 Download the Question2Answer zip file, whether it's the latest version or a backup from your production environment.
 
-1. **Unzip the Question2Answer Archive:** Extract the downloaded Question2Answer zip file.
+- **Unzip the Question2Answer Archive:** Extract the downloaded Question2Answer zip file.
 
 ```bash
 unzip /home/azureuser/Downloads/question2answer-latest.zip
 ```
 
-2. **Clean the Web Directory:** Remove any existing files in the Apache web directory to ensure a clean installation.
+- **Clean the Web Directory:** Remove any existing files in the Apache web directory to ensure a clean installation.
 
 ```bash
 sudo rm -r /var/www/html/*
 ```
 
-2. **Copy Question2Answer to the Web Directory:** Copy the extracted Question2Answer files to the Apache web directory.
+- **Copy Question2Answer to the Web Directory:** Copy the extracted Question2Answer files to the Apache web directory.
 
 ```bash
 sudo cp -r /home/azureuser/Downloads/question2answer-1.8.8/public_html/. /var/www/html
 ```
 
-3. **Set Ownership and Permissions:** Adjust the ownership and permissions to ensure the files are accessible by the web server.
+- **Set Ownership and Permissions:** Adjust the ownership and permissions to ensure the files are accessible by the web server.
 
 ```bash
 sudo chown -R www-data:www-data /var/www/html/
@@ -41,14 +41,14 @@ sudo chmod -R 755 /var/www/html/
 
 ## 3. Configure MySQL for Question2Answer
 
-1. **Log in to MySQL:** Log in to MySQL with the root user.
+- **Log in to MySQL:** Log in to MySQL with the root user.
 
 ```bash
 mysql -u root -p
 ```
 Enter the root password set during the MySQL installation.
 
-2. **Create MySQL User and Database**: Run the following commands to create a new MySQL user and database for Question2Answer. These commands also grant the required privileges to the new user on the newly created database.
+- **Create MySQL User and Database**: Run the following commands to create a new MySQL user and database for Question2Answer. These commands also grant the required privileges to the new user on the newly created database.
 
 ```sql
 CREATE USER 'q2aUser'@'localhost' IDENTIFIED BY 'password';
@@ -65,7 +65,7 @@ FLUSH PRIVILEGES;
 
 ## 4. Configure Question2Answer
 
-1. **Edit Configuration File**: Copy the example configuration file and edit it to include database and other settings.
+- **Edit Configuration File**: Copy the example configuration file and edit it to include database and other settings.
 
 ```bash
 sudo cp qa-config-example.php qa-config.php
