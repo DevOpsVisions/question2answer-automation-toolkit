@@ -6,7 +6,7 @@ This guide provides a comprehensive walkthrough for setting up a testing environ
 
 To prepare your environment, refer to the following guide:
 
-[Preparing a LAMP Stack Environment for Hosting](https://github.com/DevOpsVisions/common-workspace-hub/blob/main/docs/technical-guides/prepare_lamp_stack_env.md)
+[Preparing a LAMP Stack Environment for Hosting](https://github.com/DevOpsVisions/common-workspace-hub/blob/main/docs/technical-guides/prepare-lamp-stack-env.md)
 
 ## 2. Download and Set Up Question2Answer
 
