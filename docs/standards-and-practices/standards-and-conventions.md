@@ -25,3 +25,7 @@ All standards and conventions outlined here are based on our established guideli
 - **Azure Region**: UK South
 - **Instance**: 001
 
+## Release Notes
+
+|<p>**Aug 06**</p><p>**[@Mohamed Radwan]()**</p><p> **[20240514.1]()**</p><p> **[ce53bd8]()** <br />&nbsp;<br /> <br />&nbsp;<br /><br />&nbsp;<br /><br />&nbsp;<br /><br />&nbsp;<br /><br />&nbsp;<br />  </p>|<p>**Q2A AutoKit 1.6.1** </p><p> [DevOpsVisions]() released this 2 weeks ago&nbsp;&nbsp; [v1.6.1]()&nbsp;&nbsp; [2c537d3]() </p><p></p><p> 1.6.1 (06-08-2024)</p><p></p><p>**Features Added:**</p><p>- Added a new read-only property ([#345](), [#254]()) </p><p></p><p>**Bugs Fixed:**</p><p>- First row MS Excel error ([#123](), [234]()) </p><p></p><p>**Assets**</p><p> [App (zip)]() &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;06 August </p><p> [Source code (zip)]() &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;06 August</p><p></p>|
+| :- | :- |
