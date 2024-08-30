@@ -107,6 +107,6 @@ USE question2answer;
 source /home/azureuser/Downloads/oldbackup.sql
 ```
 
-## 6. Access Your Question2Answer Installation
+## 6. Final Checks and Testing
 
 After completing these steps, navigate to `http://<yourPublicIPAddress>` in a web browser to access your Question2Answer installation. If restored from a backup, the application should display the restored version.
