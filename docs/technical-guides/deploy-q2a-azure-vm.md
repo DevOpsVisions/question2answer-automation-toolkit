@@ -62,6 +62,9 @@ CREATE USER 'q2aUser'@'localhost' IDENTIFIED BY 'password';
 ```
 *Creates a new MySQL user `q2aUser` with the password `password`, restricted to the local host.*
 
+> [!IMPORTANT]  
+> Ensure you use a secure password.
+
 - **Check existing databases:**
 
 ```sql
