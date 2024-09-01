@@ -86,19 +86,7 @@ exit
 ```
 *Grants full privileges to `q2aUser` on the `question2answer` database and applies the changes with `FLUSH PRIVILEGES`.*
 
-## 4. Configure Question2Answer
-
-- **Edit Configuration File**: Copy the example configuration file and edit it to include database and other settings.
-
-```bash
-sudo cp qa-config-example.php qa-config.php
-```
-```bash
-sudo nano qa-config.php
-```
-In `qa-config.php`, provide the database name, user, and password created in the MySQL configuration step.
-
-## 5. Import Database (Optional)
+## 4. Import Database (Optional)
 
 If you are restoring from a production environment backup, use the following commands to import the database:
 
@@ -106,6 +94,30 @@ If you are restoring from a production environment backup, use the following com
 USE question2answer;
 source /home/azureuser/Downloads/oldbackup.sql
 ```
+
+## 5. Configure Question2Answer
+
+- **Edit Configuration File**: Set up the qa-config.php file to connect Question2Answer to your MySQL database.
+
+If you're using a new installation of Question2Answer, start by copying the sample configuration file to create a working configuration file. If you're restoring from a backup, the qa-config.php file should already exist; simply edit it as needed.
+
+**For a New Installation:**
+
+```bash
+sudo cp qa-config-example.php qa-config.php
+```
+**Edit the Configuration File:**
+
+```bash
+sudo nano qa-config.php
+```
+In the qa-config.php file, update the following settings with your database information:
+
+- **Database Name:** Replace 'your-database-name' with the name of the database you created.
+- **Database User:** Replace 'your-database-username' with the username.
+- **Database Password:** Replace 'your-database-password' with the password.
+
+Ensure these settings match the credentials you configured during the MySQL setup. Save and close the file when you're done.
 
 ## 6. Final Checks and Testing
 
