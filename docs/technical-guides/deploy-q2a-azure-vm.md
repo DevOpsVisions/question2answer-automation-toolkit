@@ -76,6 +76,8 @@ SHOW DATABASES;
 
 ```sql
 CREATE DATABASE question2answer;
+```
+```sql
 SHOW DATABASES;
 ```
 *Creates a new database named `question2answer` and lists all databases to confirm its creation.*
@@ -84,8 +86,9 @@ SHOW DATABASES;
 
 ```sql
 GRANT ALL PRIVILEGES ON question2answer.* TO 'q2aUser'@'localhost';
+```
+```sql
 FLUSH PRIVILEGES;
-exit
 ```
 *Grants full privileges to `q2aUser` on the `question2answer` database and applies the changes with `FLUSH PRIVILEGES`.*
 
@@ -93,8 +96,10 @@ exit
 
 If you are restoring from a production environment backup, use the following commands to import the database:
 
-```bash
+```sql
 USE question2answer;
+```
+```sql
 source /home/azureuser/Downloads/oldbackup.sql
 ```
 
