@@ -6,5 +6,6 @@ namespace Dovs.Q2AAutoKit.Interfaces
     {
         string GetBasePath(int levelsToTraverse);
         string GetFilePath(string defaultFilePath);
+        string[] GetExcelFiles(string basePath);
     }
 }

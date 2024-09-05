@@ -69,14 +69,47 @@ class Program
         const int LEVELSTRAVERSE = 2;
 
         IFilePathService filePathService = new FilePathService();
-        IConfigurationService configurationService = new ConfigurationService(); // Assuming you have a ConfigurationService implementation
+        IConfigurationService configurationService = new ConfigurationService(); 
 
         string basePath = filePathService.GetBasePath(LEVELSTRAVERSE);
-        string defaultFilePath = Path.Combine(basePath, "default.xlsx");
+        string[] excelFiles = filePathService.GetExcelFiles(basePath);
 
-        Console.WriteLine("Current default path is: " + defaultFilePath);
+        if (excelFiles.Length == 0)
+        {
+            Console.WriteLine("No Excel files found in the directory.");
+        }
+        else
+        {
+            Console.WriteLine("Please select an Excel file:");
+            for (int i = 0; i < excelFiles.Length; i++)
+            {
+                Console.WriteLine($"{i + 1}. {Path.GetFileName(excelFiles[i])}");
+            }
+        }
 
-        string filePath = filePathService.GetFilePath(defaultFilePath);
+        Console.WriteLine($"{excelFiles.Length + 1}. Enter your own file path");
+
+        int fileOption = GetOptionFromUser();
+        if (fileOption == excelFiles.Length + 1)
+        {
+            Console.Write("Enter the file path: ");
+            string customFilePath = Console.ReadLine();
+            ProcessExcelFile(customFilePath, configurationService);
+        }
+        else if (fileOption < 1 || fileOption > excelFiles.Length)
+        {
+            Console.WriteLine("Invalid option. Please try again.");
+            RegisterUsersFromExcel();
+        }
+        else
+        {
+            string selectedFilePath = excelFiles[fileOption - 1];
+            ProcessExcelFile(selectedFilePath, configurationService);
+        }
+    }
+
+    static void ProcessExcelFile(string filePath, IConfigurationService configurationService)
+    {
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
             Console.WriteLine("File not found. Please provide a valid file path.");

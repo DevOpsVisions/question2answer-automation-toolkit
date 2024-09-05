@@ -56,6 +56,11 @@ namespace Dovs.Q2AAutoKit.Services
             return HandleUserChoice(choice, defaultFilePath);
         }
 
+        public string[] GetExcelFiles(string basePath)
+        {
+            return Directory.GetFiles(basePath, "*.xlsx");
+        }
+
         private void PrintFilePathOptions(string defaultFilePath)
         {
             if (File.Exists(defaultFilePath))
