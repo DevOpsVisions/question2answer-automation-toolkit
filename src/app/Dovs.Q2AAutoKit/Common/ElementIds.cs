@@ -27,6 +27,12 @@
         /// This selector targets the button with the specific value attribute of 'Register'.
         /// </summary>
         public const string SELECTOR_REGISTER = ".qa-form-tall-button-register[value='Register']";
+
+        /// <summary>
+        /// The CSS selector used to locate the error element in the form.
+        /// This selector targets elements with the class 'qa-error'.
+        /// </summary>
+        public const string ERROR = ".qa-error";
     }
 
 }

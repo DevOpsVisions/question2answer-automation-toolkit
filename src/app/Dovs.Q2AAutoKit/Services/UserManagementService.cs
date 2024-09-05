@@ -12,30 +12,19 @@ namespace Dovs.Q2AAutoKit.Services
         private readonly IWebDriverService _webDriverService;
         private readonly IConfigurationService _configurationService;
 
-        /// <summary>
-        /// Constructor to inject WebDriver and Configuration service dependencies.
-        /// </summary>
-        /// <param name="webDriverService">The service responsible for providing WebDriver instances.</param>
-        /// <param name="configurationService">The service responsible for providing configuration values.</param>
         public UserManagementService(IWebDriverService webDriverService, IConfigurationService configurationService)
         {
             _webDriverService = webDriverService;
             _configurationService = configurationService;
         }
 
-        /// <summary>
-        /// Registers a list of users by automating the registration process in a browser.
-        /// </summary>
-        /// <param name="users">List of users containing usernames and emails to register.</param>
-        /// <param name="password">Password to use for all user registrations.</param>
-        /// <returns>True if all users are registered successfully, false otherwise.</returns>
         public bool RegisterUsers(List<UserData> users, string password)
         {
             using (var driver = _webDriverService.CreateWebDriver())
             {
                 string registrationUrl = _configurationService.GetConfigValue("RegistrationUrl");
+                bool isFirstIteration = true;
 
-                // Loop through each user and perform the registration process
                 foreach (var user in users)
                 {
                     Console.WriteLine($"Registering user: {user.UserName}, {user.Email}");
@@ -43,11 +32,18 @@ namespace Dovs.Q2AAutoKit.Services
 
                     FillRegistrationForm(driver, user, password);
                     ClickRegisterButton(driver);
-                    System.Threading.Thread.Sleep(1000); // Wait for 1 second to allow form processing
+                    System.Threading.Thread.Sleep(1000);
+
+                    if (isFirstIteration && IsErrorElementPresent(driver))
+                    {
+                        Console.WriteLine("Error detected, retrying registration...");
+                        ClickRegisterButton(driver);
+                        System.Threading.Thread.Sleep(1000);
+                        isFirstIteration = false; // Set the flag to false after the first iteration
+                    }
 
                     Logout(driver);
 
-                    // Verify if the registration form is still present, indicating a failed registration
                     if (!IsRegistrationFormPresent(driver))
                     {
                         Console.WriteLine("User registered successfully.");
@@ -55,20 +51,19 @@ namespace Dovs.Q2AAutoKit.Services
                     else
                     {
                         Console.WriteLine("Failed to register user.");
-                        return false; // Early exit on failure
+                        return false;
                     }
                 }
 
-                return true; // Return true if all users are registered successfully
+                return true;
             }
         }
 
-        /// <summary>
-        /// Fills the registration form with user data.
-        /// </summary>
-        /// <param name="driver">Instance of the WebDriver controlling the browser.</param>
-        /// <param name="userData">The user data (username, email) to fill the form.</param>
-        /// <param name="password">The password to be used for registration.</param>
+        private bool IsErrorElementPresent(IWebDriver driver)
+        {
+            return ElementExists(driver, By.CssSelector(ElementIds.ERROR));
+        }
+
         private void FillRegistrationForm(IWebDriver driver, UserData userData, string password)
         {
             driver.FindElement(By.Id(ElementIds.HANDLE)).SendKeys(userData.UserName);
@@ -76,48 +71,44 @@ namespace Dovs.Q2AAutoKit.Services
             driver.FindElement(By.Id(ElementIds.EMAIL)).SendKeys(userData.Email);
         }
 
-        /// <summary>
-        /// Clicks the registration button on the form.
-        /// </summary>
-        /// <param name="driver">Instance of the WebDriver controlling the browser.</param>
         private void ClickRegisterButton(IWebDriver driver)
         {
-            try
-            {
-                var registerButton = driver.FindElement(By.CssSelector(ElementIds.SELECTOR_REGISTER));
-                registerButton.Click();
-            }
-            catch (NoSuchElementException)
-            {
-                Console.WriteLine("Registration button not found; form may have already been submitted.");
-            }
+            ClickElement(driver, By.CssSelector(ElementIds.SELECTOR_REGISTER), "Registration button not found; form may have already been submitted.");
         }
 
-        /// <summary>
-        /// Logs out the user after registration is complete.
-        /// </summary>
-        /// <param name="driver">Instance of the WebDriver controlling the browser.</param>
         private void Logout(IWebDriver driver)
         {
             string logoutUrl = _configurationService.GetConfigValue("LogoutUrl");
             driver.Navigate().GoToUrl(logoutUrl);
         }
 
-        /// <summary>
-        /// Checks whether the registration form is still present after an attempt to register.
-        /// </summary>
-        /// <param name="driver">Instance of the WebDriver controlling the browser.</param>
-        /// <returns>True if the registration form is still present, false otherwise.</returns>
         private bool IsRegistrationFormPresent(IWebDriver driver)
+        {
+            return ElementExists(driver, By.Id(ElementIds.HANDLE));
+        }
+
+        private bool ElementExists(IWebDriver driver, By by)
         {
             try
             {
-                driver.FindElement(By.Id(ElementIds.HANDLE)); // Check for the presence of the 'handle' field in the form
+                driver.FindElement(by);
                 return true;
             }
             catch (NoSuchElementException)
             {
-                return false; // Return false if the form is not present, indicating successful registration
+                return false;
+            }
+        }
+
+        private void ClickElement(IWebDriver driver, By by, string errorMessage)
+        {
+            try
+            {
+                driver.FindElement(by).Click();
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine(errorMessage);
             }
         }
     }
