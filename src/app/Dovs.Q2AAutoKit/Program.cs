@@ -1,4 +1,6 @@
-﻿using Dovs.Q2AAutoKit;
+﻿using Dovs.FileSystemInteractor.Interfaces;
+using Dovs.FileSystemInteractor.Services;
+using Dovs.Q2AAutoKit;
 using Dovs.Q2AAutoKit.Common;
 using Dovs.Q2AAutoKit.Interfaces;
 using Dovs.Q2AAutoKit.Services;
@@ -27,7 +29,7 @@ class Program
         switch (option)
         {
             case 1:
-                RegisterUsersFromExcel();
+                RegisterUsers();
                 DisplayMenu();
                 break;
             case 2:
@@ -64,55 +66,21 @@ class Program
         }
     }
 
-    static void RegisterUsersFromExcel()
+    static void RegisterUsers()
     {
         const int LEVELSTRAVERSE = 2;
 
         IFilePathService filePathService = new FilePathService();
-        IConfigurationService configurationService = new ConfigurationService(); 
+        IConfigurationService configurationService = new ConfigurationService();
+        IFileInteractionService fileInteractionService = new FileInteractionService();
 
-        string basePath = filePathService.GetBasePath(LEVELSTRAVERSE);
-        string[] excelFiles = filePathService.GetExcelFiles(basePath);
+        string filePath = fileInteractionService.SelectFilePath(filePathService, LEVELSTRAVERSE);
 
-        if (excelFiles.Length == 0)
-        {
-            Console.WriteLine("No Excel files found in the directory.");
-        }
-        else
-        {
-            Console.WriteLine("Please select an Excel file:");
-            for (int i = 0; i < excelFiles.Length; i++)
-            {
-                Console.WriteLine($"{i + 1}. {Path.GetFileName(excelFiles[i])}");
-            }
-        }
-
-        Console.WriteLine($"{excelFiles.Length + 1}. Enter your own file path");
-
-        int fileOption = GetOptionFromUser();
-        if (fileOption == excelFiles.Length + 1)
-        {
-            Console.Write("Enter the file path: ");
-            string customFilePath = Console.ReadLine();
-            ProcessExcelFile(customFilePath, configurationService);
-        }
-        else if (fileOption < 1 || fileOption > excelFiles.Length)
-        {
-            Console.WriteLine("Invalid option. Please try again.");
-            RegisterUsersFromExcel();
-        }
-        else
-        {
-            string selectedFilePath = excelFiles[fileOption - 1];
-            ProcessExcelFile(selectedFilePath, configurationService);
-        }
-    }
-
-    static void ProcessExcelFile(string filePath, IConfigurationService configurationService)
-    {
         if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
         {
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("File not found. Please provide a valid file path.");
+            Console.ResetColor();
             return;
         }
 
@@ -126,7 +94,18 @@ class Program
         IUserManagementService registrationService = new UserManagementService(webDriverService, configurationService);
 
         bool allUsersRegistered = registrationService.RegisterUsers(userDataList, password);
-        Console.WriteLine(allUsersRegistered ? "All users have been registered successfully." : "Registration process encountered errors.");
+
+        if (allUsersRegistered)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("All users have been registered successfully.");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Registration process encountered errors.");
+        }
+        Console.ResetColor();
     }
 
     static void RemoveUsers()

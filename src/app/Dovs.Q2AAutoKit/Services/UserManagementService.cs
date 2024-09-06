@@ -36,7 +36,9 @@ namespace Dovs.Q2AAutoKit.Services
 
                     if (isFirstIteration && IsErrorElementPresent(driver))
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Error detected, retrying registration...");
+                        Console.ResetColor();
                         ClickRegisterButton(driver);
                         System.Threading.Thread.Sleep(1000);
                         isFirstIteration = false; // Set the flag to false after the first iteration
@@ -46,11 +48,15 @@ namespace Dovs.Q2AAutoKit.Services
 
                     if (!IsRegistrationFormPresent(driver))
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("User registered successfully.");
+                        Console.ResetColor();
                     }
                     else
                     {
+                        Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine("Failed to register user.");
+                        Console.ResetColor();
                         return false;
                     }
                 }
@@ -108,7 +114,9 @@ namespace Dovs.Q2AAutoKit.Services
             }
             catch (NoSuchElementException)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(errorMessage);
+                Console.ResetColor();
             }
         }
     }

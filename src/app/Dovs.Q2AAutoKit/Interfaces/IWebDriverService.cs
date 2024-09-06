@@ -6,5 +6,6 @@ namespace Dovs.Q2AAutoKit.Interfaces
     public interface IWebDriverService
     {
         IWebDriver CreateWebDriver();
+        void QuitWebDriver(IWebDriver driver);
     }
 }

@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Ignore build results and temporary files for Dovs.FileSystemInteractor
+src/app/Dovs.FileSystemInteractor/

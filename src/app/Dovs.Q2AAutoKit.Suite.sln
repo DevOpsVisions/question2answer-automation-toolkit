@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dovs.Q2AAutoKit", "Dovs.Q2AAutoKit\Dovs.Q2AAutoKit.csproj", "{BCC115BE-DDEC-438B-96F5-8AD8989CAA3F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dovs.Q2AAutoKit", "Dovs.Q2AAutoKit\Dovs.Q2AAutoKit.csproj", "{BCC115BE-DDEC-438B-96F5-8AD8989CAA3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dovs.FileSystemInteractor", "Dovs.FileSystemInteractor\Dovs.FileSystemInteractor.csproj", "{FA430FA5-D1D4-41EC-8738-09A0982089B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{BCC115BE-DDEC-438B-96F5-8AD8989CAA3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCC115BE-DDEC-438B-96F5-8AD8989CAA3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCC115BE-DDEC-438B-96F5-8AD8989CAA3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA430FA5-D1D4-41EC-8738-09A0982089B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA430FA5-D1D4-41EC-8738-09A0982089B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA430FA5-D1D4-41EC-8738-09A0982089B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA430FA5-D1D4-41EC-8738-09A0982089B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
